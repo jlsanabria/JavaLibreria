@@ -24,6 +24,7 @@ public class FormLogin extends JFrame {
     // Inicio de la fábrica de sesiones de Hibernate
     SessionFactory sessionFactory = HibernateConfig.createSessionFactory();
     UsuarioService usuarioService = new UsuarioServiceImpl(sessionFactory);
+    FormCrud formCrud;
 
     public FormLogin() {
         setLookAndFeel("Nimbus");
@@ -50,6 +51,8 @@ public class FormLogin extends JFrame {
         if(Objects.nonNull(usuarioAutenticado)) {
             lError.setText("");
             System.out.println("Bienvenido(a) " + usuarioAutenticado.getUsername());
+            this.setVisible(false);
+            formCrud = new FormCrud(usuarioAutenticado);
         } else {
             lError.setText("Credenciales no válidas :(");
         }

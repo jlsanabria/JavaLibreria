@@ -1,0 +1,185 @@
+JFDML JFormDesigner: "8.2.4.0.393" Java: "21.0.3" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {par l {comp toolBarLibreria:::::x, seq l {space :::p, comp containerPanel:::::x}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {comp toolBarLibreria:::p::p, space :::p, comp containerPanel:::::x, space :::p}}"
+		} ) {
+			name: "this"
+			"iconImage": new com.jformdesigner.model.SwingIcon( 0, "/assets/libreria_icon.png" )
+			"visible": true
+			"title": "Form CRUD"
+			add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
+				name: "toolBarLibreria"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonListar"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/assets/search_icon_32.png" )
+					"maximumSize": &Dimension0 new java.awt.Dimension( 38, 38 )
+					"minimumSize": &Dimension1 new java.awt.Dimension( 38, 38 )
+					"preferredSize": &Dimension2 new java.awt.Dimension( 38, 38 )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "mostrarPanelListar", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
+					name: "separator3"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonAdicionar"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/assets/new_icon_32.png" )
+					"maximumSize": #Dimension0
+					"minimumSize": #Dimension1
+					"preferredSize": #Dimension2
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "mostrarPanelAdicionar", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
+					name: "separator4"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonEditar"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/assets/edit_icon_32.png" )
+					"maximumSize": #Dimension0
+					"minimumSize": #Dimension1
+					"preferredSize": #Dimension2
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "mostrarPanelEditar", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
+					name: "separator5"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonEliminar"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/assets/delete_icon_32.png" )
+					"maximumSize": #Dimension0
+					"minimumSize": #Dimension1
+					"preferredSize": #Dimension2
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "mostrarPanelEliminar", true ) )
+				} )
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.CardLayout ) ) {
+				name: "containerPanel"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {seq t {space ::105:x, par l:::p {comp labelBienvenida::::402:x, seq {space :p:106:p, comp labelUser::::296:x}}, space :p:189:p}}"
+					"$verticalGroup": "par l {seq l {space :p:81:p, comp labelBienvenida:::p::p, space :p:64:p, comp labelUser:::p:48:p, space ::252:x}}"
+				} ) {
+					name: "panelPrincipal"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "labelBienvenida"
+						"text": "Bienvenido(a)"
+						"horizontalAlignment": 0
+						"font": new java.awt.Font( "Roboto Thin", 1, 36 )
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "labelUser"
+						"horizontalAlignment": 0
+						"font": new java.awt.Font( "Roboto", 0, 22 )
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "principal"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {space :0:696:x}"
+					"$verticalGroup": "par l {space :0:493:x}"
+				} ) {
+					name: "panelListar"
+					"background": new java.awt.Color( 153, 153, 153, 255 )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "listar"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {space :0:696:x}"
+					"$verticalGroup": "par l {space :0:493:x}"
+				} ) {
+					name: "panelAdicionar"
+					"background": new java.awt.Color( 0, 153, 51, 255 )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "adicionar"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {space :0:696:x}"
+					"$verticalGroup": "par l {space :0:493:x}"
+				} ) {
+					name: "panelEditar"
+					"background": new java.awt.Color( 0, 102, 204, 255 )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "editar"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {space :0:696:x}"
+					"$verticalGroup": "par l {space :0:493:x}"
+				} ) {
+					name: "panelEliminar"
+					"background": new java.awt.Color( 255, 51, 51, 255 )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "eliminar"
+				} )
+			} )
+			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+				name: "menuLibreria"
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menuArchivo"
+					"text": "Archivo"
+					"mnemonic": 65
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemImprimir"
+						"text": "Imprimir"
+					} )
+					add( new FormComponent( "javax.swing.JPopupMenu$Separator" ) {
+						name: "separator1"
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemSalir"
+						"text": "Salir"
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menuCrud"
+					"text": "Crud"
+					"mnemonic": 67
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemListar"
+						"text": "Listar"
+						"icon": new com.jformdesigner.model.SwingIcon( 0, "/assets/search_icon_16.png" )
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 76, 130, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "mostrarPanelListar", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JPopupMenu$Separator" ) {
+						name: "separator2"
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemAdicionar"
+						"text": "Adicionar"
+						"icon": new com.jformdesigner.model.SwingIcon( 0, "/assets/new_icon_16.png" )
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 65, 130, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "mostrarPanelAdicionar", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemEditar"
+						"text": "Editar"
+						"icon": new com.jformdesigner.model.SwingIcon( 0, "/assets/edit_icon_16.png" )
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 69, 130, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "mostrarPanelEditar", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemEliminar"
+						"text": "Eliminar"
+						"icon": new com.jformdesigner.model.SwingIcon( 0, "/assets/delete_icon_16.png" )
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 68, 130, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "mostrarPanelEliminar", true ) )
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menuAyuda"
+					"text": "Ayuda"
+					"mnemonic": 85
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemAcerca"
+						"text": "Acerca de ..."
+					} )
+				} )
+			}
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 20, 0 )
+			"size": new java.awt.Dimension( 710, 600 )
+		} )
+	}
+}
