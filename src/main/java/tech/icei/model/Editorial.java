@@ -19,6 +19,22 @@ public class Editorial {
         this.nombre = nombre;
     }
 
+    public Integer getEditorialId() {
+        return editorialId;
+    }
+
+    public void setEditorialId(Integer editorialId) {
+        this.editorialId = editorialId;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     @Override
     public String toString() {
         return "Editorial{" +

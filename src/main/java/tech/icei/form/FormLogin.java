@@ -52,7 +52,7 @@ public class FormLogin extends JFrame {
             lError.setText("");
             System.out.println("Bienvenido(a) " + usuarioAutenticado.getUsername());
             this.setVisible(false);
-            formCrud = new FormCrud(usuarioAutenticado);
+            formCrud = new FormCrud(sessionFactory, usuarioAutenticado);
         } else {
             lError.setText("Credenciales no válidas :(");
         }

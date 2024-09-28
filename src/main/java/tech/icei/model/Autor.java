@@ -34,6 +34,38 @@ public class Autor {
         this.nacionalidad = nacionalidad;
     }
 
+    public String getCodAutor() {
+        return codAutor;
+    }
+
+    public void setCodAutor(String codAutor) {
+        this.codAutor = codAutor;
+    }
+
+    public String getNombreAutor() {
+        return nombreAutor;
+    }
+
+    public void setNombreAutor(String nombreAutor) {
+        this.nombreAutor = nombreAutor;
+    }
+
+    public String getApellidoAutor() {
+        return apellidoAutor;
+    }
+
+    public void setApellidoAutor(String apellidoAutor) {
+        this.apellidoAutor = apellidoAutor;
+    }
+
+    public String getNacionalidad() {
+        return nacionalidad;
+    }
+
+    public void setNacionalidad(String nacionalidad) {
+        this.nacionalidad = nacionalidad;
+    }
+
     @Override
     public String toString() {
         return "Autor{" +

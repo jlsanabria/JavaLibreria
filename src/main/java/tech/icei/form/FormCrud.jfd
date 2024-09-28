@@ -58,8 +58,8 @@ new FormModel {
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.CardLayout ) ) {
 				name: "containerPanel"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {seq t {space ::105:x, par l:::p {comp labelBienvenida::::402:x, seq {space :p:106:p, comp labelUser::::296:x}}, space :p:189:p}}"
-					"$verticalGroup": "par l {seq l {space :p:81:p, comp labelBienvenida:::p::p, space :p:64:p, comp labelUser:::p:48:p, space ::252:x}}"
+					"$horizontalGroup": "par l {seq {space ::149:x, comp labelBienvenida:::p:402:p, space :p:145:p}, seq l {space :p:198:p, comp labelUser:::p:296:p, space ::202:x}}"
+					"$verticalGroup": "par l {seq l {space :p:79:p, comp labelBienvenida:::p::p, space s:::p, comp labelUser:::p:48:p, space ::300:x}}"
 				} ) {
 					name: "panelPrincipal"
 					add( new FormComponent( "javax.swing.JLabel" ) {
@@ -77,11 +77,23 @@ new FormModel {
 					"value": "principal"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {space :0:696:x}"
-					"$verticalGroup": "par l {space :0:493:x}"
+					"$horizontalGroup": "par l {seq l {space :p:38:p, par l {comp scrollPaneTabla:::p:612:p, seq {comp labelBuscar:::p:73:p, space :::p, comp tfBuscar:::p:210:p}}, space ::46:x}}"
+					"$verticalGroup": "par l {seq l {space :p:27:p, par b {comp labelBuscar::b:p::p, comp tfBuscar::b:p::p}, space :p:43:p, comp scrollPaneTabla:::p:359:p, space ::30:x}}"
 				} ) {
 					name: "panelListar"
-					"background": new java.awt.Color( 153, 153, 153, 255 )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "labelBuscar"
+						"text": "Buscar:"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "tfBuscar"
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPaneTabla"
+						add( new FormComponent( "javax.swing.JTable" ) {
+							name: "tableLibros"
+						} )
+					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "listar"
 				} )

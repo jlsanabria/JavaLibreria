@@ -4,27 +4,53 @@
 
 package tech.icei.form;
 
+import org.hibernate.SessionFactory;
+import tech.icei.dao.LibroDAO;
 import tech.icei.model.Usuario;
+import tech.icei.service.LibroService;
+import tech.icei.service.LibroServiceImpl;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.smartcardio.Card;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * @author jsanabria
  */
 public class FormCrud extends JFrame {
+    private SessionFactory factory;
     private Usuario usuarioCRUD;
-    public FormCrud(Usuario usuario) {
+    private LibroService libroService;
+
+    private DefaultTableModel model;
+    private String columnNames[] = {"Código", "Título", "Autor", "# páginas", "Editorial"};
+
+    public FormCrud(SessionFactory factory, Usuario usuario) {
+        this.factory = factory;
         this.usuarioCRUD = usuario;
+        libroService = new LibroServiceImpl(factory);
         initComponents();
         labelUser.setText(usuarioCRUD.getUsername());
     }
 
     private void mostrarPanelListar(ActionEvent e) {
         ((CardLayout) containerPanel.getLayout()).show(containerPanel, "listar");
+        model = new DefaultTableModel(null, columnNames);
+        libroService.obtenerLibros()
+                .forEach(libro -> {
+                    Object[] filaLibro = new Object[columnNames.length];
+                    filaLibro[0] = libro.getCodLibro();
+                    filaLibro[1] = libro.getTitulo();
+                    filaLibro[2] = libro.getAutor().getNombreAutor().concat(" ")
+                            .concat(libro.getAutor().getApellidoAutor());
+                    filaLibro[3] = libro.getNumeroPaginas();
+                    filaLibro[4] = libro.getEditorial().getNombre();
+                    model.addRow(filaLibro);
+        });
+        tableLibros.setModel(model);
     }
 
     private void mostrarPanelAdicionar(ActionEvent e) {
@@ -38,6 +64,8 @@ public class FormCrud extends JFrame {
     private void mostrarPanelEliminar(ActionEvent e) {
         ((CardLayout) containerPanel.getLayout()).show(containerPanel, "eliminar");
     }
+
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
@@ -63,6 +91,10 @@ public class FormCrud extends JFrame {
         labelBienvenida = new JLabel();
         labelUser = new JLabel();
         panelListar = new JPanel();
+        labelBuscar = new JLabel();
+        tfBuscar = new JTextField();
+        scrollPaneTabla = new JScrollPane();
+        tableLibros = new JTable();
         panelAdicionar = new JPanel();
         panelEditar = new JPanel();
         panelEliminar = new JPanel();
@@ -182,11 +214,13 @@ public class FormCrud extends JFrame {
 
         //======== containerPanel ========
         {
-            containerPanel.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing. border .EmptyBorder ( 0
-            , 0 ,0 , 0) ,  "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn" , javax. swing .border . TitledBorder. CENTER ,javax . swing. border .TitledBorder . BOTTOM
-            , new java. awt .Font ( "Dia\u006cog", java .awt . Font. BOLD ,12 ) ,java . awt. Color .red ) ,
-            containerPanel. getBorder () ) ); containerPanel. addPropertyChangeListener( new java. beans .PropertyChangeListener ( ){ @Override public void propertyChange (java . beans. PropertyChangeEvent e
-            ) { if( "\u0062ord\u0065r" .equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } );
+            containerPanel.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing
+            . border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder
+            . CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .
+            awt .Font .BOLD ,12 ), java. awt. Color. red) ,containerPanel. getBorder( )) )
+            ; containerPanel. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e
+            ) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} )
+            ;
             containerPanel.setLayout(new CardLayout());
 
             //======== panelPrincipal ========
@@ -205,40 +239,62 @@ public class FormCrud extends JFrame {
                 panelPrincipal.setLayout(panelPrincipalLayout);
                 panelPrincipalLayout.setHorizontalGroup(
                     panelPrincipalLayout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
-                            .addContainerGap(105, Short.MAX_VALUE)
-                            .addGroup(panelPrincipalLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                .addComponent(labelBienvenida, GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
-                                .addGroup(panelPrincipalLayout.createSequentialGroup()
-                                    .addGap(106, 106, 106)
-                                    .addComponent(labelUser, GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)))
-                            .addGap(189, 189, 189))
+                        .addGroup(panelPrincipalLayout.createSequentialGroup()
+                            .addContainerGap(149, Short.MAX_VALUE)
+                            .addComponent(labelBienvenida, GroupLayout.PREFERRED_SIZE, 402, GroupLayout.PREFERRED_SIZE)
+                            .addGap(145, 145, 145))
+                        .addGroup(panelPrincipalLayout.createSequentialGroup()
+                            .addGap(198, 198, 198)
+                            .addComponent(labelUser, GroupLayout.PREFERRED_SIZE, 296, GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(202, Short.MAX_VALUE))
                 );
                 panelPrincipalLayout.setVerticalGroup(
                     panelPrincipalLayout.createParallelGroup()
                         .addGroup(panelPrincipalLayout.createSequentialGroup()
-                            .addGap(81, 81, 81)
+                            .addGap(79, 79, 79)
                             .addComponent(labelBienvenida)
-                            .addGap(64, 64, 64)
+                            .addGap(18, 18, 18)
                             .addComponent(labelUser, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(252, Short.MAX_VALUE))
+                            .addContainerGap(300, Short.MAX_VALUE))
                 );
             }
             containerPanel.add(panelPrincipal, "principal");
 
             //======== panelListar ========
             {
-                panelListar.setBackground(new Color(0x999999));
+
+                //---- labelBuscar ----
+                labelBuscar.setText("Buscar:");
+
+                //======== scrollPaneTabla ========
+                {
+                    scrollPaneTabla.setViewportView(tableLibros);
+                }
 
                 GroupLayout panelListarLayout = new GroupLayout(panelListar);
                 panelListar.setLayout(panelListarLayout);
                 panelListarLayout.setHorizontalGroup(
                     panelListarLayout.createParallelGroup()
-                        .addGap(0, 696, Short.MAX_VALUE)
+                        .addGroup(panelListarLayout.createSequentialGroup()
+                            .addGap(38, 38, 38)
+                            .addGroup(panelListarLayout.createParallelGroup()
+                                .addComponent(scrollPaneTabla, GroupLayout.PREFERRED_SIZE, 612, GroupLayout.PREFERRED_SIZE)
+                                .addGroup(panelListarLayout.createSequentialGroup()
+                                    .addComponent(labelBuscar, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(tfBuscar, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)))
+                            .addContainerGap(46, Short.MAX_VALUE))
                 );
                 panelListarLayout.setVerticalGroup(
                     panelListarLayout.createParallelGroup()
-                        .addGap(0, 493, Short.MAX_VALUE)
+                        .addGroup(panelListarLayout.createSequentialGroup()
+                            .addGap(27, 27, 27)
+                            .addGroup(panelListarLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(labelBuscar)
+                                .addComponent(tfBuscar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addGap(43, 43, 43)
+                            .addComponent(scrollPaneTabla, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(30, Short.MAX_VALUE))
                 );
             }
             containerPanel.add(panelListar, "listar");
@@ -343,6 +399,10 @@ public class FormCrud extends JFrame {
     private JLabel labelBienvenida;
     private JLabel labelUser;
     private JPanel panelListar;
+    private JLabel labelBuscar;
+    private JTextField tfBuscar;
+    private JScrollPane scrollPaneTabla;
+    private JTable tableLibros;
     private JPanel panelAdicionar;
     private JPanel panelEditar;
     private JPanel panelEliminar;

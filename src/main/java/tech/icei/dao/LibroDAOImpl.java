@@ -96,4 +96,5 @@ public class LibroDAOImpl implements LibroDAO {
                 .setParameter("titulo", "%" + titulo + "%");
         return query.list();
     }
+
 }
