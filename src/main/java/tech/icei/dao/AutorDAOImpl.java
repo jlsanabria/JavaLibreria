@@ -5,6 +5,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import tech.icei.model.Autor;
 
+import java.util.List;
+
 public class AutorDAOImpl implements AutorDAO {
     private final SessionFactory factory;
     private Session session;
@@ -31,5 +33,14 @@ public class AutorDAOImpl implements AutorDAO {
         session.getTransaction().commit();
         session.close();
         return autor;
+    }
+
+    @Override
+    public List<Autor> obtenerAutores() {
+        session = factory.openSession();
+        session.beginTransaction();
+        Query<Autor> query = session
+                .createQuery("from Autor", Autor.class);
+        return query.getResultList();
     }
 }

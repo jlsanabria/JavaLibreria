@@ -6,12 +6,18 @@ package tech.icei.form;
 
 import org.hibernate.SessionFactory;
 import tech.icei.dao.LibroDAO;
+import tech.icei.model.Autor;
+import tech.icei.model.Editorial;
+import tech.icei.model.Libro;
 import tech.icei.model.Usuario;
 import tech.icei.service.LibroService;
 import tech.icei.service.LibroServiceImpl;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import javax.smartcardio.Card;
 import javax.swing.*;
 import javax.swing.GroupLayout;
@@ -28,6 +34,9 @@ public class FormCrud extends JFrame {
     private DefaultTableModel model;
     private String columnNames[] = {"Código", "Título", "Autor", "# páginas", "Editorial"};
 
+    private List<Autor> autoresForm;
+    private List<Editorial> editorialesForm;
+
     public FormCrud(SessionFactory factory, Usuario usuario) {
         this.factory = factory;
         this.usuarioCRUD = usuario;
@@ -38,6 +47,10 @@ public class FormCrud extends JFrame {
 
     private void mostrarPanelListar(ActionEvent e) {
         ((CardLayout) containerPanel.getLayout()).show(containerPanel, "listar");
+        listarLibros();
+    }
+
+    private void listarLibros() {
         model = new DefaultTableModel(null, columnNames);
         libroService.obtenerLibros()
                 .forEach(libro -> {
@@ -49,12 +62,47 @@ public class FormCrud extends JFrame {
                     filaLibro[3] = libro.getNumeroPaginas();
                     filaLibro[4] = libro.getEditorial().getNombre();
                     model.addRow(filaLibro);
-        });
+                });
         tableLibros.setModel(model);
     }
 
     private void mostrarPanelAdicionar(ActionEvent e) {
         ((CardLayout) containerPanel.getLayout()).show(containerPanel, "adicionar");
+        adicionarLibro();
+    }
+
+    private void adicionarLibro() {
+        tfCodigo.setText(nuevoCodigoLibro());
+        llenarAutores();
+        llenarEditoriales();
+    }
+
+    public String nuevoCodigoLibro() {
+        String lastCode = libroService.obtenerLibros()
+                .stream()
+                .sorted(Comparator.comparing(Libro::getCodLibro).reversed())
+                .map(Libro::getCodLibro).findFirst().get();
+        String lastValue = lastCode.substring(lastCode.indexOf("-") + 1);
+        String newCode = "L-" + String.format("%04d", (Integer.valueOf(lastValue) + 1));
+        return newCode;
+    }
+
+    private void llenarAutores() {
+        autoresForm = new ArrayList<>();
+        autoresForm = libroService.obtenerAutores();
+
+        autoresForm.forEach(autor -> {
+            cbAutores.addItem(autor.getNombreAutor() + " " + autor.getApellidoAutor());
+        });
+    }
+
+    private void llenarEditoriales() {
+        editorialesForm = new ArrayList<>();
+        editorialesForm = libroService.obtenerEditoriales();
+
+        editorialesForm.forEach(editorial -> {
+            cbEditoriales.addItem(editorial.getNombre());
+        });
     }
 
     private void mostrarPanelEditar(ActionEvent e) {
@@ -65,6 +113,44 @@ public class FormCrud extends JFrame {
         ((CardLayout) containerPanel.getLayout()).show(containerPanel, "eliminar");
     }
 
+    private void guardarLibro(ActionEvent e) {
+        // TODO add your code here
+        Libro libro = new Libro();
+        libro.setCodLibro(tfCodigo.getText());
+        libro.setTitulo(tfTitulo.getText());
+
+        String itemAutor = String.valueOf(cbAutores.getSelectedItem());
+        Autor autor = autoresForm
+                .stream()
+                .filter(l -> (l.getNombreAutor() + " " + l.getApellidoAutor()).equalsIgnoreCase(itemAutor))
+                .findFirst()
+                .get();
+        libro.setAutor(autor);
+
+        String itemEditorial = String.valueOf(cbEditoriales.getSelectedItem());
+        Editorial editorial = editorialesForm
+                .stream()
+                .filter(ed -> ed.getNombre().equals(itemEditorial))
+                .findFirst().get();
+        libro.setEditorial(editorial);
+
+        libro.setNumeroPaginas(Integer.parseInt(tfNroPaginas.getText()));
+
+//        System.out.println("Item Autor --> " + itemAutor);
+//        System.out.println("Item Editorial --> " + itemEditorial);
+//        System.out.println("Nuevo libro --> " + libro);
+
+        Libro libroRegistrado = libroService.guardarLibro(libro);
+        System.out.println("Libro registrado :) --> " + libroRegistrado);
+
+
+    }
+
+    private void limpiar(ActionEvent e) {
+        tfCodigo.setText(nuevoCodigoLibro());
+        tfTitulo.setText("");
+        tfNroPaginas.setText("");
+    }
 
 
     private void initComponents() {
@@ -96,6 +182,19 @@ public class FormCrud extends JFrame {
         scrollPaneTabla = new JScrollPane();
         tableLibros = new JTable();
         panelAdicionar = new JPanel();
+        labelTituloRegistrar = new JLabel();
+        lCodigo = new JLabel();
+        tfCodigo = new JTextField();
+        lTitulo = new JLabel();
+        tfTitulo = new JTextField();
+        lAutor = new JLabel();
+        cbAutores = new JComboBox();
+        lEditorial = new JLabel();
+        cbEditoriales = new JComboBox();
+        lNroPaginas = new JLabel();
+        tfNroPaginas = new JTextField();
+        bGuardar = new JButton();
+        bLimpiar = new JButton();
         panelEditar = new JPanel();
         panelEliminar = new JPanel();
 
@@ -214,13 +313,11 @@ public class FormCrud extends JFrame {
 
         //======== containerPanel ========
         {
-            containerPanel.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing
-            . border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder
-            . CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .
-            awt .Font .BOLD ,12 ), java. awt. Color. red) ,containerPanel. getBorder( )) )
-            ; containerPanel. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e
-            ) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} )
-            ;
+            containerPanel.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0
+            ,0,0,0), "JF\u006frmDes\u0069gner \u0045valua\u0074ion",javax.swing.border.TitledBorder.CENTER,javax.swing.border.TitledBorder.BOTTOM
+            ,new java.awt.Font("D\u0069alog",java.awt.Font.BOLD,12),java.awt.Color.red),
+            containerPanel. getBorder()));containerPanel. addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override public void propertyChange(java.beans.PropertyChangeEvent e
+            ){if("\u0062order".equals(e.getPropertyName()))throw new RuntimeException();}});
             containerPanel.setLayout(new CardLayout());
 
             //======== panelPrincipal ========
@@ -301,17 +398,106 @@ public class FormCrud extends JFrame {
 
             //======== panelAdicionar ========
             {
-                panelAdicionar.setBackground(new Color(0x009933));
+
+                //---- labelTituloRegistrar ----
+                labelTituloRegistrar.setText("Registro de Libro");
+                labelTituloRegistrar.setHorizontalAlignment(SwingConstants.CENTER);
+                labelTituloRegistrar.setFont(new Font("Roboto", Font.BOLD, 28));
+
+                //---- lCodigo ----
+                lCodigo.setText("C\u00f3digo:");
+                lCodigo.setFont(new Font("Inter", Font.PLAIN, 14));
+
+                //---- tfCodigo ----
+                tfCodigo.setEditable(false);
+
+                //---- lTitulo ----
+                lTitulo.setText("T\u00edtulo:");
+                lTitulo.setFont(new Font("Inter", Font.PLAIN, 14));
+
+                //---- lAutor ----
+                lAutor.setText("Autor:");
+                lAutor.setFont(new Font("Inter", Font.PLAIN, 14));
+
+                //---- lEditorial ----
+                lEditorial.setText("Editorial:");
+                lEditorial.setFont(new Font("Inter", Font.PLAIN, 14));
+
+                //---- lNroPaginas ----
+                lNroPaginas.setText("N\u00b0 p\u00e1ginas:");
+                lNroPaginas.setFont(new Font("Inter", Font.PLAIN, 14));
+
+                //---- bGuardar ----
+                bGuardar.setText("Guardar");
+                bGuardar.addActionListener(e -> guardarLibro(e));
+
+                //---- bLimpiar ----
+                bLimpiar.setText("Limpiar");
+                bLimpiar.addActionListener(e -> limpiar(e));
 
                 GroupLayout panelAdicionarLayout = new GroupLayout(panelAdicionar);
                 panelAdicionar.setLayout(panelAdicionarLayout);
                 panelAdicionarLayout.setHorizontalGroup(
                     panelAdicionarLayout.createParallelGroup()
-                        .addGap(0, 696, Short.MAX_VALUE)
+                        .addGroup(panelAdicionarLayout.createSequentialGroup()
+                            .addGap(55, 55, 55)
+                            .addGroup(panelAdicionarLayout.createParallelGroup()
+                                .addComponent(labelTituloRegistrar)
+                                .addGroup(panelAdicionarLayout.createSequentialGroup()
+                                    .addGroup(panelAdicionarLayout.createParallelGroup()
+                                        .addComponent(lCodigo)
+                                        .addComponent(lTitulo)
+                                        .addComponent(lAutor)
+                                        .addComponent(lEditorial))
+                                    .addGap(35, 35, 35)
+                                    .addGroup(panelAdicionarLayout.createParallelGroup()
+                                        .addComponent(cbEditoriales, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(tfCodigo, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(tfTitulo, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cbAutores, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(panelAdicionarLayout.createSequentialGroup()
+                                    .addGroup(panelAdicionarLayout.createParallelGroup()
+                                        .addGroup(panelAdicionarLayout.createSequentialGroup()
+                                            .addComponent(lNroPaginas)
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(tfNroPaginas, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
+                                            .addGap(58, 58, 58))
+                                        .addGroup(GroupLayout.Alignment.TRAILING, panelAdicionarLayout.createSequentialGroup()
+                                            .addComponent(bGuardar, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)))
+                                    .addComponent(bLimpiar, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
+                            .addContainerGap(150, Short.MAX_VALUE))
                 );
                 panelAdicionarLayout.setVerticalGroup(
                     panelAdicionarLayout.createParallelGroup()
-                        .addGap(0, 493, Short.MAX_VALUE)
+                        .addGroup(panelAdicionarLayout.createSequentialGroup()
+                            .addGap(27, 27, 27)
+                            .addComponent(labelTituloRegistrar)
+                            .addGap(15, 15, 15)
+                            .addGroup(panelAdicionarLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(lCodigo)
+                                .addComponent(tfCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addGap(28, 28, 28)
+                            .addGroup(panelAdicionarLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(lTitulo)
+                                .addComponent(tfTitulo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addGap(30, 30, 30)
+                            .addGroup(panelAdicionarLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(lAutor)
+                                .addComponent(cbAutores, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addGap(25, 25, 25)
+                            .addGroup(panelAdicionarLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(lEditorial)
+                                .addComponent(cbEditoriales, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addGap(27, 27, 27)
+                            .addGroup(panelAdicionarLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(lNroPaginas)
+                                .addComponent(tfNroPaginas, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addGap(47, 47, 47)
+                            .addGroup(panelAdicionarLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(bGuardar)
+                                .addComponent(bLimpiar))
+                            .addContainerGap(56, Short.MAX_VALUE))
                 );
             }
             containerPanel.add(panelAdicionar, "adicionar");
@@ -404,6 +590,19 @@ public class FormCrud extends JFrame {
     private JScrollPane scrollPaneTabla;
     private JTable tableLibros;
     private JPanel panelAdicionar;
+    private JLabel labelTituloRegistrar;
+    private JLabel lCodigo;
+    private JTextField tfCodigo;
+    private JLabel lTitulo;
+    private JTextField tfTitulo;
+    private JLabel lAutor;
+    private JComboBox cbAutores;
+    private JLabel lEditorial;
+    private JComboBox cbEditoriales;
+    private JLabel lNroPaginas;
+    private JTextField tfNroPaginas;
+    private JButton bGuardar;
+    private JButton bLimpiar;
     private JPanel panelEditar;
     private JPanel panelEliminar;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on

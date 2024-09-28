@@ -2,11 +2,15 @@ package tech.icei.dao;
 
 import tech.icei.model.Autor;
 
+import java.util.List;
+
 public interface AutorDAO {
 
     //public void setSession(Session session);
 
-    public Autor getAutor(String codigo);
+    Autor getAutor(String codigo);
 
-    public Autor guardarAutor(Autor autor);
+    Autor guardarAutor(Autor autor);
+
+    List<Autor> obtenerAutores();
 }

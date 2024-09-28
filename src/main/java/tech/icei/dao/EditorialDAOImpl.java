@@ -2,7 +2,11 @@ package tech.icei.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import tech.icei.model.Autor;
 import tech.icei.model.Editorial;
+
+import java.util.List;
 
 public class EditorialDAOImpl implements EditorialDAO {
     private final SessionFactory factory;
@@ -28,4 +32,14 @@ public class EditorialDAOImpl implements EditorialDAO {
         session.getTransaction().commit();
         session.close();
     }
+
+    @Override
+    public List<Editorial> obtenerEditoriales() {
+        session = factory.openSession();
+        session.beginTransaction();
+        Query<Editorial> query = session
+                .createQuery("from Editorial ", Editorial.class);
+        return query.getResultList();
+    }
+
 }
